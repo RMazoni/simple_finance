@@ -1,0 +1,55 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Transactions" %>
+
+<%= link_to "New transaction", new_transaction_path %>
+
+<%= form_with url: import_transactions_path, html: { multipart: true } do |f| %>
+  <div>
+    <%= f.label :file, "Importar arquivo OFX" %>
+    <%= f.file_field :file, accept: ".ofx", onchange: "this.form.submit();" %>
+  </div>
+<% end %>
+
+<%= form_with url: transactions_path, method: :get, local: true do |form| %>
+  <div>
+    <%= form.label :month, "Mês" %>
+    <%= form.select :month, (1..12).map { |m| [Date::MONTHNAMES[m], m] }, selected: @selected_month %>
+  </div>
+
+  <div>
+    <%= form.label :year, "Ano" %>
+    <%= form.select :year, (Transaction.minimum(:year) || Date.today.year..Date.today.year).to_a.reverse, selected: @selected_year %>
+  </div>
+
+  <div>
+    <%= form.submit "Filtrar" %>
+  </div>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Descrição</th>
+      <th>Valor</th>
+      <th>Categoria</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody id="transactions">
+    <% @transactions.each do |transaction| %>
+      <%= turbo_stream_from "transaction_#{transaction.id}" %>
+      <tr id="transaction_<%= transaction.id %>">
+        <td><%= "#{transaction.month}/#{transaction.year}" %></td>
+        <td><%= transaction.description %></td>
+        <td><%= number_to_currency(transaction.amount) %></td>
+        <td><%= transaction.category&.name || "Sem categoria" %></td>
+        <td>
+          <%= link_to "Editar", edit_transaction_path(transaction), class: "btn btn-primary" %>
+          <%= button_to "Remover", transaction_path(transaction), method: :delete, data: { turbo_confirm: "Tem certeza que deseja excluir esta transação?" }, class: "btn btn-danger", remote: true %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

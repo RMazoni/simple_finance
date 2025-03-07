@@ -1,0 +1,26 @@
+<div id="<%= dom_id transaction %>">
+  <p>
+    <strong>Description:</strong>
+    <%= transaction.description %>
+  </p>
+
+  <p>
+    <strong>Amount:</strong>
+    <%= transaction.amount %>
+  </p>
+
+  <p>
+    <strong>Category:</strong>
+    <%= transaction.category&.name || "Sem Categoria" %>
+  </p>
+
+  <p>
+    <strong>Month:</strong>
+    <%= transaction.month %>
+  </p>
+
+  <p>
+    <strong>Month:</strong>
+    <%= transaction.year %>
+  </p>
+</div>

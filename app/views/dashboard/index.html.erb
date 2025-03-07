@@ -1,0 +1,21 @@
+<h1>Painel Financeiro</h1>
+
+<%= form_with url: dashboard_index_path, method: :get, local: true do %>
+  <div>
+    <%= label_tag :month, "Mês:" %>
+    <%= select_tag :month, options_for_select((1..12).map { |m| [Date::MONTHNAMES[m], m] }, @month), include_blank: true %> <!-- Sem incluir mês vazio -->
+
+    <%= label_tag :year, "Ano:" %>
+    <%= select_tag :year, options_for_select((Date.today.year - 5..Date.today.year).to_a, @year), include_blank: false %> <!-- Mantenha o ano atual por padrão -->
+
+    <%= submit_tag "Filtrar" %>
+  </div>
+<% end %>
+
+<div>
+  <p><strong>Receitas:</strong> <%= number_to_currency(@total_income) %></p>
+  <p><strong>Despesas:</strong> <%= number_to_currency(@total_expense) %></p>
+  <p><strong>Saldo Atual:</strong> <%= number_to_currency(@balance) %></p>
+</div>
+
+<%= link_to "Ver Transações", transactions_path, class: "btn btn-primary" %>

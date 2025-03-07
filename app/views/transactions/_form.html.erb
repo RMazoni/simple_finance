@@ -1,0 +1,39 @@
+<%= form_with(model: transaction) do |form| %>
+  <% if transaction.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(transaction.errors.count, "error") %> prohibited this transaction from being saved:</h2>
+
+      <ul>
+        <% transaction.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :description, style: "display: block" %>
+    <%= form.text_field :description %>
+  </div>
+
+  <div>
+    <%= form.label :amount, style: "display: block" %>
+    <%= form.number_field :amount, step: 0.01, class: "form-control" %>
+  </div>
+
+  <div>
+    <%= form.label :category_id, style: "display: block" %>
+    <%= form.collection_select :category_id, Category.all, :id, :name %>
+  </div>
+  <div>
+    <%= form.label :month, style: "display: block" %>
+    <%= form.select :month, (1..12).map { |m| [Date::MONTHNAMES[m], m] }, selected: Date.today.month %>
+  </div>
+  <div>
+    <%= form.label :year, style: "display: block" %>
+    <%= form.select :year, (Date.today.year - 5..Date.today.year).to_a.reverse %>
+  </div>
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

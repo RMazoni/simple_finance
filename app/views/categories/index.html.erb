@@ -1,0 +1,20 @@
+<h1>Categorias</h1>
+<%= link_to "Nova Categoria", new_category_path, class: "btn btn-primary" %>
+<table>
+  <tr>
+    <th>Nome</th>
+    <th>Categoria Pai</th>
+    <th>Ações</th>
+  </tr>
+  <% @categories.each do |category| %>
+    <tr>
+      <td><%= category.name %></td>
+      <td><%= category.parent&.name || "Nenhuma" %></td>
+      <td>
+        <%= link_to "Editar", edit_category_path(category) %> |
+        <%= button_to "Excluir", category, method: :delete, data: { confirm: "Tem certeza?" } %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+

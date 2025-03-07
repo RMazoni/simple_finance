@@ -1,0 +1,38 @@
+<h2>Importar Transações</h2>
+
+<%= form_with url: save_import_transactions_path, method: :post do |f| %>
+  <div>
+    <%= f.label :month, "Mês:" %>
+    <%= f.select :month, (1..12).map { |m| [Date::MONTHNAMES[m], m] }, selected: Date.today.month %>
+    <%= f.label :year, "Ano:" %>
+    <%= f.select :year, (Date.today.year - 5..Date.today.year).to_a.reverse %>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Descrição</th>
+        <th>Valor</th>
+        <th>Categoria</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @transactions.each_with_index do |tx, index| %>
+        <tr>
+          <td><%= tx[:date] %></td>
+          <td><%= tx[:description] %></td>
+          <td><%= number_to_currency(tx[:amount]) %></td>
+          <td>
+            <%= f.select "transactions[#{index}][category_id]", options_from_collection_for_select(@categories, :id, :name) %>
+          </td>
+          <%= f.hidden_field "transactions[#{index}][date]", value: tx[:date] %>
+          <%= f.hidden_field "transactions[#{index}][description]", value: tx[:description] %>
+          <%= f.hidden_field "transactions[#{index}][amount]", value: tx[:amount] %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= f.submit "Salvar Transações", class: "btn btn-success" %>
+<% end %>
+

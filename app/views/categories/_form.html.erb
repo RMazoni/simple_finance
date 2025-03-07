@@ -1,0 +1,25 @@
+<%= form_with(model: category, local: true) do |f| %>
+  <% if category.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(category.errors.count, "erro") %> impediram o salvamento da categoria:</h4>
+      <ul>
+        <% category.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, "Nome da Categoria" %>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :parent_id, "Categoria Pai (Opcional)" %>
+    <%= f.collection_select :parent_id, Category.all, :id, :name, { include_blank: "Nenhuma" }, class: "form-control" %>
+  </div>
+
+  <%= f.submit "Salvar", class: "btn btn-primary" %>
+<% end %>
+
